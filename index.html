@@ -1,1 +1,562 @@
-PLACEHOLDER_CONTENT
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth scroll-pt-24">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunBot | GitHub Actions in your menu bar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.05); 
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        body { 
+            background: linear-gradient(135deg, #18181b 0%, #064e3b 100%); 
+            min-height: 100vh; 
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif; 
+        }
+        .glass { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            border: 1px solid var(--glass-border); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2); 
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .glass:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .faq-answer p {
+            margin-bottom: 0.75rem;
+        }
+        .faq-answer p:last-child {
+            margin-bottom: 0;
+        }
+        /* Custom Accordion Styles */
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+        details summary {
+            list-style: none;
+        }
+        details[open] summary ~ * {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; margin-top: -10px; }
+            to { opacity: 1; margin-top: 0; }
+        }
+    </style>
+    <script>
+        function copyInstallCommand(btnElement) {
+            const command = "curl -fsSL https://eoncode.github.io/run-bot/install.sh | bash";
+            navigator.clipboard.writeText(command).then(() => {
+                const originalHtml = btnElement.innerHTML;
+                btnElement.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-emerald-400"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>`;
+                setTimeout(() => {
+                    btnElement.innerHTML = originalHtml;
+                }, 2000);
+            });
+        }
+
+        // ScrollSpy logic to update active nav link
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('main > div[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -70% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.add('text-emerald-400');
+                                link.classList.remove('text-zinc-400');
+                            } else {
+                                link.classList.remove('text-emerald-400');
+                                link.classList.add('text-zinc-400');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</head>
+<body class="text-zinc-200 antialiased selection:bg-emerald-900 selection:text-emerald-100">
+
+    <!-- Navigation -->
+    <nav id="main-nav" class="fixed w-full z-50 transition-all duration-300 border-b-0 border-transparent bg-transparent" style="border-bottom-width: 1px;">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="#" class="flex items-center gap-1.5 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" viewBox="266.27 190.44 1628.63 1628.63">
+<g transform="translate(0.000000,2160.000000) scale(0.100000,-0.100000)">
+<path d="M 8814.1,6073.1 L 12810.9,6073.1 Q 15360.9,6073.1 15360.9,8623.0 L 15360.9,11123.0 Q 15360.9,13673.0 12810.9,13673.0 L 8814.1,13673.0 Q 6264.1,13673.0 6264.1,11123.0 L 6264.1,8623.0 Q 6264.1,6073.1 8814.1,6073.1 Z" fill="none" stroke="#ffffff" stroke-width="1150" stroke-linejoin="round"/>
+<path d="M 9192.0,14528.0 Q 9192.0,15588.0 10462.0,15588.0 L 11162.0,15588.0 Q 12432.0,15588.0 12432.0,14528.0 Z" fill="#ffffff" stroke="none"/>
+<path d="M 10812.0,15588.0 L 10812.0,16455.0" fill="none" stroke="#ffffff" stroke-width="620" stroke-linecap="round"/>
+<path d="M 9707.0,17500.0 A 1105.0,1105.0 0 1 0 11917.0,17500.0 A 1105.0,1105.0 0 1 0 9707.0,17500.0 Z" fill="#ffffff" stroke="none"/>
+<path d="M 5409.1,11893.0 A 1240.0,1680.0 0 0 1 4169.1,10213.0 L 4169.1,9533.0 A 1240.0,1680.0 0 0 1 5409.1,7853.0 L 5409.1,11893.0 Z" fill="#ffffff" stroke="none"/>
+<path d="M 16215.9,11893.0 A 1240.0,1680.0 0 0 0 17455.9,10213.0 L 17455.9,9533.0 A 1240.0,1680.0 0 0 0 16215.9,7853.0 L 16215.9,11893.0 Z" fill="#ffffff" stroke="none"/>
+<path d="M 8653.9,10808.5 C 8526.6,10788.4 8337.6,10737.5 8245.2,10696.0 C 8085.7,10626.3 8030.8,10595.5 7930.3,10520.4 C 7847.2,10457.5 7670.3,10277.9 7622.1,10206.9 C 7604.6,10181.4 7585.9,10157.3 7581.9,10153.3 C 7555.1,10127.8 7434.5,9883.9 7434.5,9853.1 C 7434.5,9842.4 7429.1,9830.3 7422.4,9826.3 C 7415.7,9822.3 7407.7,9802.2 7403.6,9782.1 C 7399.6,9760.6 7388.9,9717.8 7380.9,9684.3 C 7372.8,9650.8 7359.4,9590.5 7352.7,9550.3 C 7301.8,9240.7 7335.3,9129.5 7500.1,9074.6 L 7569.8,9051.8 L 7628.8,9089.3 C 7660.9,9110.8 7754.7,9187.1 7836.5,9258.1 C 8014.7,9413.6 8121.9,9486.0 8285.4,9562.3 C 8521.2,9673.5 8590.9,9693.6 8767.8,9703.0 C 8940.6,9712.4 9247.5,9682.9 9264.9,9656.1 C 9268.9,9649.4 9283.7,9644.1 9298.4,9644.1 C 9311.8,9644.1 9334.6,9638.7 9348.0,9632.0 C 9360.0,9625.3 9401.6,9606.5 9437.8,9589.1 C 9496.7,9562.3 9528.9,9543.6 9638.8,9472.5 C 9759.4,9396.2 9819.7,9347.9 9968.4,9205.9 C 10106.4,9075.9 10148.0,9055.8 10237.7,9074.6 C 10294.0,9086.6 10363.7,9138.9 10389.2,9188.5 C 10413.3,9235.4 10417.3,9457.8 10394.5,9542.2 C 10386.5,9571.7 10374.4,9621.3 10366.4,9650.8 C 10292.7,9928.1 10170.7,10149.2 9989.8,10331.5 C 9902.7,10418.6 9737.9,10555.3 9717.8,10555.3 C 9713.8,10555.3 9685.7,10572.7 9654.8,10592.8 C 9593.2,10634.3 9538.3,10661.1 9444.5,10696.0 C 9411.0,10708.0 9372.1,10722.8 9357.4,10729.5 C 9195.2,10793.8 8829.4,10834.0 8653.9,10808.5" fill="#ffffff" stroke="none"/>
+<path d="M 12553.3,10849.4 C 12417.9,10825.3 12332.2,10807.9 12298.7,10797.2 C 12279.9,10791.8 12238.4,10778.4 12204.9,10769.0 C 12037.4,10719.5 11789.5,10566.7 11639.4,10419.3 C 11396.8,10182.1 11245.4,9888.7 11199.9,9571.1 C 11171.7,9371.4 11169.0,9321.8 11187.8,9265.6 C 11210.6,9195.9 11241.4,9163.7 11323.1,9124.9 C 11431.7,9073.9 11437.0,9076.6 11655.5,9269.6 C 11761.3,9363.4 11831.0,9417.0 11969.0,9509.4 C 12077.6,9583.1 12279.9,9685.0 12316.1,9685.0 C 12328.1,9685.0 12340.2,9690.3 12344.2,9697.0 C 12364.3,9729.2 12694.0,9757.3 12856.1,9739.9 C 13030.3,9721.2 13087.9,9711.8 13097.3,9697.0 C 13101.3,9690.3 13114.7,9685.0 13128.1,9685.0 C 13158.9,9685.0 13284.9,9627.4 13416.2,9552.3 C 13477.9,9517.5 13629.3,9417.0 13638.7,9403.6 C 13642.7,9399.6 13657.4,9386.2 13673.5,9375.4 C 13689.6,9364.7 13743.2,9319.2 13794.1,9274.9 C 13930.8,9153.0 13962.9,9128.9 14008.5,9110.1 C 14044.7,9095.4 14058.1,9096.7 14113.0,9123.5 C 14147.9,9139.6 14193.4,9174.4 14214.9,9201.2 C 14253.7,9248.1 14255.1,9252.2 14255.1,9399.6 C 14255.1,9541.6 14240.3,9648.8 14213.5,9701.1 C 14206.8,9714.5 14201.5,9734.6 14201.5,9748.0 C 14201.5,9825.7 14066.1,10121.8 13975.0,10241.1 C 13792.8,10480.9 13512.7,10681.9 13230.0,10778.4 C 13051.7,10838.7 12700.7,10874.9 12553.3,10849.4" fill="#ffffff" stroke="none"/>
+</g></svg>
+                    <span class="font-bold text-xl tracking-tight text-white">RunBot</span>
+                </a>
+
+                <!-- Right Menu -->
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                    <a href="#home" class="nav-link text-emerald-400 hover:text-white transition-colors">Install</a>
+                    <a href="#features" class="nav-link text-zinc-400 hover:text-white transition-colors">Why</a>
+                    <a href="#monitor" class="nav-link text-zinc-400 hover:text-white transition-colors">How</a>
+                    <a href="#faq" class="nav-link text-zinc-400 hover:text-white transition-colors">FAQ</a>
+                    <a href="#get-started" class="nav-link text-zinc-400 hover:text-white transition-colors">Get started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-28 pb-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <!-- Hero Section -->
+        <div id="home" class="text-center py-12 lg:py-20">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-6 drop-shadow-sm leading-tight">
+                GitHub Actions, local runners & <br class="hidden md:block" />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400">AI recovery in your menu bar.</span>
+            </h1>
+            <p class="mt-6 text-xl text-zinc-300 max-w-3xl mx-auto font-medium leading-relaxed">
+                A free, open-source macOS menu bar app for monitoring workflow runs, managing self-hosted runners, and auto-recovering from failures with AI.
+            </p>
+
+            <div class="mt-12 flex justify-center">
+                <div class="glass rounded-xl p-2 pl-4 pr-2 flex items-center gap-4 text-sm md:text-base font-mono text-zinc-200">
+                    <span class="whitespace-nowrap py-2">curl -fsSL https://eoncode.github.io/run-bot/install.sh | bash</span>
+                    <button onclick="copyInstallCommand(this)" class="p-2 rounded-lg hover:bg-white/10 transition-colors text-zinc-400 hover:text-white focus:outline-none" title="Copy to clipboard">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Local Runners -->
+        <div id="features" class="py-20 border-t border-white/10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white">Why Local Runners?</h2>
+                <p class="mt-4 text-lg text-zinc-300 font-medium">Built for the agentic era.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass p-8 rounded-3xl hover:-translate-y-1">
+                    <h3 class="text-xl font-bold mb-4 text-white">Up to 5× faster builds</h3>
+                    <p class="text-zinc-300 leading-relaxed">Persistent caches, zero queue time, no throttling, and as much parallelism as your hardware can handle.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl hover:-translate-y-1">
+                    <h3 class="text-xl font-bold mb-4 text-white">Cut your Actions bill</h3>
+                    <p class="text-zinc-300 leading-relaxed">Cloud macOS minutes are expensive. Running locally costs nothing, saving hundreds per developer in active AI workflows.</p>
+                </div>
+                <div class="glass p-8 rounded-3xl hover:-translate-y-1">
+                    <h3 class="text-xl font-bold mb-4 text-white">Fix failures automatically</h3>
+                    <p class="text-zinc-300 leading-relaxed">Run UI tests around the clock and let an AI agent fix them while you sleep — so the PR is waiting for you in the morning.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alternating Features (Monitor) -->
+        <div id="monitor" class="py-24 border-t border-white/10">
+            <div class="text-center mb-24">
+                <h2 class="text-3xl font-bold text-white">Monitor & Manage</h2>
+                <p class="mt-4 text-lg text-zinc-300 font-medium">No browser tabs, no Terminal trips.</p>
+            </div>
+
+            <!-- Feature 01 -->
+            <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20 mb-32">
+                <div class="flex-1 order-2 md:order-1">
+                    <h3 class="text-3xl font-bold text-white mb-6 leading-tight">Actions in one place</h3>
+                    <p class="text-lg text-zinc-300 mb-4 leading-relaxed">Expand any workflow into a live tree: Workflow → Jobs → Steps. Copy logs, cancel, or re-run directly from the context menu.</p>
+                </div>
+
+                <div class="flex-1 order-1 md:order-2 w-full">
+                    <div class="glass rounded-3xl p-6 pb-4 shadow-2xl relative overflow-hidden font-mono text-sm">
+                        <!-- Simulated Mock Tree -->
+                        <div class="space-y-4">
+                            <!-- Workflow -->
+                            <div class="flex items-center gap-2 text-white font-bold">
+                                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.2)]"></div>
+                                <span class="text-zinc-400 font-medium">a3f92c1</span>
+                                <span class="truncate">Update deploy config</span>
+                                <span class="ml-auto text-[10px] tracking-wider uppercase bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/20">Success</span>
+                            </div>
+
+                            <!-- Job 1 -->
+                            <div class="flex items-center gap-3 text-zinc-200 ml-6 relative">
+                                <div class="absolute -left-[19px] top-0 bottom-1/2 w-px bg-white/10"></div>
+                                <div class="absolute -left-[19px] top-1/2 w-4 h-px bg-white/10"></div>
+                                <div class="w-2 h-2 rounded-full bg-emerald-500/80"></div>
+                                <span>Build & Test</span>
+                                <span class="ml-auto text-zinc-500 text-xs">01:24</span>
+                            </div>
+
+                            <!-- Step 1.1 -->
+                            <div class="flex items-center gap-3 text-zinc-400 ml-12 relative">
+                                <div class="absolute -left-[18px] -top-6 bottom-1/2 w-px bg-white/10"></div>
+                                <div class="absolute -left-[18px] top-1/2 w-4 h-px bg-white/10"></div>
+                                <svg class="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                <span>Checkout</span>
+                                <span class="ml-auto text-xs">00:03</span>
+                            </div>
+
+                            <!-- Step 1.2 -->
+                            <div class="flex items-center gap-3 text-zinc-400 ml-12 relative">
+                                <div class="absolute -left-[18px] -top-6 bottom-1/2 w-px bg-white/10"></div>
+                                <div class="absolute -left-[18px] top-1/2 w-4 h-px bg-white/10"></div>
+                                <svg class="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                <span>Run tests</span>
+                                <span class="ml-auto text-xs">01:18</span>
+                            </div>
+
+                            <!-- Job 2 -->
+                            <div class="flex items-center gap-3 text-zinc-200 ml-6 relative mt-6">
+                                <div class="absolute -left-[19px] -top-[100px] bottom-1/2 w-px bg-white/10"></div>
+                                <div class="absolute -left-[19px] top-1/2 w-4 h-px bg-white/10"></div>
+                                <div class="w-2 h-2 rounded-full bg-emerald-500/80"></div>
+                                <span>Lint & Format</span>
+                                <span class="ml-auto text-zinc-500 text-xs">00:18</span>
+                            </div>
+
+                            <!-- Step 2.1 -->
+                            <div class="flex items-center gap-3 text-zinc-400 ml-12 relative">
+                                <div class="absolute -left-[18px] -top-6 bottom-1/2 w-px bg-white/10"></div>
+                                <div class="absolute -left-[18px] top-1/2 w-4 h-px bg-white/10"></div>
+                                <svg class="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                <span>SwiftLint</span>
+                                <span class="ml-auto text-xs">00:11</span>
+                            </div>
+
+                            <!-- Step 2.2 -->
+                            <div class="flex items-center gap-3 text-zinc-400 ml-12 relative">
+                                <div class="absolute -left-[18px] -top-6 bottom-1/2 w-px bg-white/10"></div>
+                                <div class="absolute -left-[18px] top-1/2 w-4 h-px bg-white/10"></div>
+                                <svg class="w-3.5 h-3.5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                <span>swift-format</span>
+                                <span class="ml-auto text-xs">00:07</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 02 -->
+            <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20 mb-32">
+                <div class="flex-1 order-1 md:order-1 w-full">
+                    <div class="glass rounded-3xl p-6 pb-4 shadow-2xl overflow-hidden font-mono text-sm relative">
+                        <div class="text-xs font-bold tracking-wider uppercase text-zinc-500 mb-3">Local runners</div>
+
+                        <div class="space-y-0 divide-y divide-white/5">
+                            <div class="flex items-center gap-3 py-3">
+                                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.2)]"></div>
+                                <span class="text-zinc-200 font-semibold">psw-org-runner</span>
+                                <span class="ml-auto text-zinc-500 text-xs mr-3">running</span>
+                                <div class="w-8 h-4 rounded-full bg-emerald-500 relative flex-shrink-0">
+                                    <div class="absolute right-0.5 top-0.5 w-3 h-3 bg-white rounded-full shadow-sm"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-3 py-3">
+                                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.2)]"></div>
+                                <span class="text-zinc-200 font-semibold">psw-pwa-repo-runner-1</span>
+                                <span class="ml-auto text-zinc-500 text-xs mr-3">running</span>
+                                <div class="w-8 h-4 rounded-full bg-emerald-500 relative flex-shrink-0">
+                                    <div class="absolute right-0.5 top-0.5 w-3 h-3 bg-white rounded-full shadow-sm"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-3 py-3 opacity-60">
+                                <div class="w-2.5 h-2.5 rounded-full bg-zinc-500"></div>
+                                <span class="text-zinc-400 font-medium">run-bot-repo-runner-2</span>
+                                <span class="ml-auto text-zinc-500 text-xs mr-3">stopped</span>
+                                <div class="w-8 h-4 rounded-full bg-white/10 relative flex-shrink-0">
+                                    <div class="absolute left-0.5 top-0.5 w-3 h-3 bg-white/80 rounded-full shadow-sm"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-1 order-2 md:order-2">
+                    <h3 class="text-3xl font-bold text-white mb-6 leading-tight">Control every local runner</h3>
+                    <p class="text-lg text-zinc-300 mb-4 leading-relaxed">Provision new local runners in one click. Toggle them on and off, deregister, or remove them when no longer needed.</p>
+                </div>
+            </div>
+
+            <!-- Feature 03 -->
+            <div class="flex flex-col md:flex-row items-center gap-12 md:gap-20">
+                <div class="flex-1 order-2 md:order-1">
+                    <h3 class="text-3xl font-bold text-white mb-6 leading-tight">AI Failure Hooks</h3>
+                    <p class="text-lg text-zinc-300 mb-4 leading-relaxed">Set a failure hook per repo or branch. Let agents like Claude Code, Codex, or Cline CLI automatically diagnose failures and push a fix.</p>
+                </div>
+
+                <div class="flex-1 order-1 md:order-2 w-full">
+                    <div class="glass rounded-3xl p-6 shadow-2xl relative overflow-hidden font-mono text-sm flex flex-col gap-3">
+                        <div class="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5">
+                            <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                            <div class="flex flex-col gap-0.5 flex-1 min-w-0">
+                                <span class="text-zinc-200 font-semibold truncate">test: fix auth token flow</span>
+                                <span class="text-[11px] text-zinc-500">main · 2m ago</span>
+                            </div>
+                            <span class="ml-auto text-[10px] tracking-wider uppercase bg-red-500/10 text-red-400 px-2 py-1 rounded border border-red-500/20 flex-shrink-0 font-bold">Failed</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400 flex-shrink-0"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                            <div class="flex flex-col gap-0.5 flex-1 min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[11px] font-bold text-blue-400 uppercase">Claude · Analyzing</span>
+                                </div>
+                                <span class="text-[11px] text-zinc-500 truncate"><span class="bg-white/5 px-1 rounded">AuthService.swift:42</span> – pushing fix...</span>
+                            </div>
+                            <span class="ml-auto text-[10px] tracking-wider uppercase bg-blue-500/10 text-blue-400 px-2 py-1 rounded border border-blue-500/20 flex-shrink-0 font-bold">In progress</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl border border-white/10 bg-white/5">
+                            <svg class="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                            <div class="flex flex-col gap-0.5 flex-1 min-w-0">
+                                <span class="text-zinc-200 font-semibold truncate">test: fix auth token flow</span>
+                                <span class="text-[11px] text-zinc-500">fixed by claude · 1 commit</span>
+                            </div>
+                            <span class="ml-auto text-[10px] tracking-wider uppercase bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded border border-emerald-500/20 flex-shrink-0 font-bold">Success</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div id="faq" class="py-20 border-t border-white/10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white">Frequently Asked Questions</h2>
+            </div>
+            <div class="max-w-3xl mx-auto space-y-4">
+
+                <details name="faq" class="glass rounded-2xl group overflow-hidden" open>
+                    <summary class="p-6 text-lg md:text-xl font-bold text-white cursor-pointer flex justify-between items-center outline-none">
+                        <span>Is it free? Is it open source? Why isn't it on the App Store?</span>
+                        <span class="flex-shrink-0 ml-4 text-zinc-400">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-open:hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 hidden group-open:block"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 text-zinc-300 leading-relaxed faq-answer">
+                        <p>Yes and yes. RunBot is completely self-contained — no Apple Developer account required. You can fork it, customize it, and run your own build.</p>
+                        <p>The app is free because for us it pays for it self in saved Cloud CI/CD spend. It's not on the App Store because Apple tends to clamp down on apps that access files and Terminal — that may change in the future.</p>
+                    </div>
+                </details>
+
+                <details name="faq" class="glass rounded-2xl group overflow-hidden">
+                    <summary class="p-6 text-lg md:text-xl font-bold text-white cursor-pointer flex justify-between items-center outline-none">
+                        <span>Besides cost and speed, what makes local runners better?</span>
+                        <span class="flex-shrink-0 ml-4 text-zinc-400">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-open:hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 hidden group-open:block"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 text-zinc-300 leading-relaxed faq-answer">
+                        <p>Quite a lot. Local runners can run headed UI tests (impossible on cloud). They can test against beta OS versions and the latest Xcode the day they drop. Caches persist between runs, so dependencies don't re-download every time. And since you own the machine, there's no queue — your run starts the moment you push. Additionally, running builds locally keeps your proprietary code within your environment, significantly increasing privacy and security.</p>
+                    </div>
+                </details>
+
+                <details name="faq" class="glass rounded-2xl group overflow-hidden">
+                    <summary class="p-6 text-lg md:text-xl font-bold text-white cursor-pointer flex justify-between items-center outline-none">
+                        <span>How many runners can I run on one machine?</span>
+                        <span class="flex-shrink-0 ml-4 text-zinc-400">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-open:hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 hidden group-open:block"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 text-zinc-300 leading-relaxed faq-answer">
+                        <p>As many as you like — each runner is a lightweight process. A 16 GB M1 MacBook handles 4–6 comfortably. A newer MacBook Pro can push 10–12. A Mac mini M4 with 64 GB can run 16–20. Stack enough runners and most CI pipelines complete in seconds, not minutes.</p>
+                    </div>
+                </details>
+
+                <details name="faq" class="glass rounded-2xl group overflow-hidden">
+                    <summary class="p-6 text-lg md:text-xl font-bold text-white cursor-pointer flex justify-between items-center outline-none">
+                        <span>Which AI agents work with the failure hook?</span>
+                        <span class="flex-shrink-0 ml-4 text-zinc-400">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-open:hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 hidden group-open:block"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 text-zinc-300 leading-relaxed faq-answer">
+                        <p>Any CLI tool that accepts terminal input works. The default uses Cline CLI, but you can swap in <code>claude</code>, <code>codex</code>, or anything else.</p>
+                        <p>To configure it, go to the repo in Settings and edit the hook command. For example, to call Claude Code: <br><code class="bg-black/20 px-3 py-2 rounded-lg mt-3 block font-mono text-sm border border-white/10">claude -p "your instructions here" --dangerously-skip-permissions</code></p>
+                    </div>
+                </details>
+
+                <details name="faq" class="glass rounded-2xl group overflow-hidden">
+                    <summary class="p-6 text-lg md:text-xl font-bold text-white cursor-pointer flex justify-between items-center outline-none">
+                        <span>Why does RunBot need GitHub permissions?</span>
+                        <span class="flex-shrink-0 ml-4 text-zinc-400">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-open:hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 hidden group-open:block"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 text-zinc-300 leading-relaxed faq-answer">
+                        <p>It only asks for the minimum needed. <code>repo</code> unlocks workflow status, logs, and runner registration; <code>read:org</code> + <code>admin:org</code> lets it monitor org-level runners; <code>workflow</code> enables re-running or cancelling runs.</p>
+                        <p><strong>RunBot cannot read your source code, write to repos, or open issues</strong>, and your token never leaves your Mac's Keychain. Prefer to skip OAuth entirely? RunBot automatically picks up a token from the <code>GH_TOKEN</code> or <code>GITHUB_TOKEN</code> environment variable.</p>
+                    </div>
+                </details>
+
+                <details name="faq" class="glass rounded-2xl group overflow-hidden">
+                    <summary class="p-6 text-lg md:text-xl font-bold text-white cursor-pointer flex justify-between items-center outline-none">
+                        <span>Does RunBot send any data anywhere?</span>
+                        <span class="flex-shrink-0 ml-4 text-zinc-400">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-open:hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 hidden group-open:block"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 text-zinc-300 leading-relaxed faq-answer">
+                        <p>No. RunBot only contacts <code>api.github.com</code> for the REST API and <code>github.com</code> for sign-in. There's no analytics, no telemetry, no crash reporting, and no third-party calls. All run data is held in memory only and discarded on quit.</p>
+                    </div>
+                </details>
+
+                <details name="faq" class="glass rounded-2xl group overflow-hidden">
+                    <summary class="p-6 text-lg md:text-xl font-bold text-white cursor-pointer flex justify-between items-center outline-none">
+                        <span>Can I use RunBot without local runners?</span>
+                        <span class="flex-shrink-0 ml-4 text-zinc-400">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-open:hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 hidden group-open:block"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 text-zinc-300 leading-relaxed faq-answer">
+                        <p>Yes. It works perfectly as a standalone workflow monitor. You get a live tree view of all your workflow runs, jobs, and steps. The AI failure hook also works without local runners — it fires whenever a monitored run fails, regardless of where it executed.</p>
+                    </div>
+                </details>
+
+                <details name="faq" class="glass rounded-2xl group overflow-hidden">
+                    <summary class="p-6 text-lg md:text-xl font-bold text-white cursor-pointer flex justify-between items-center outline-none">
+                        <span>Why is CI/CD so important in the agentic era?</span>
+                        <span class="flex-shrink-0 ml-4 text-zinc-400">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-open:hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 hidden group-open:block"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 text-zinc-300 leading-relaxed faq-answer">
+                        <p>Agents loop until the code builds, tests pass, and every check goes green. Cloud-based Actions weren't built for intensive, long-running loops. Because agentic coding is non-deterministic, your CI/CD pipeline acts as a boundary layer (AI code reviewers, code-health gates like SonarQube, dependency scanners, UI tests) that turns wild agent output into something you can ship.</p>
+                    </div>
+                </details>
+
+                <details name="faq" class="glass rounded-2xl group overflow-hidden">
+                    <summary class="p-6 text-lg md:text-xl font-bold text-white cursor-pointer flex justify-between items-center outline-none">
+                        <span>What technology stack powers RunBot?</span>
+                        <span class="flex-shrink-0 ml-4 text-zinc-400">
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 group-open:hidden"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                            <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 hidden group-open:block"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" /></svg>
+                        </span>
+                    </summary>
+                    <div class="px-6 pb-6 text-zinc-300 leading-relaxed faq-answer">
+                        <p>RunBot is built entirely in <strong>Swift 6.2 using SwiftUI</strong>, with a modern actor-based architecture that keeps all UI state on the <code>@MainActor</code> and background work fully isolated in dedicated actors. Data flow is driven by Swift's native <code>async/await</code> and <code>@Observable</code>.</p>
+                    </div>
+                </details>
+
+            </div>
+        </div>
+
+        <!-- Get Started / Install Section -->
+        <div id="get-started" class="py-20 border-t border-white/10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white">Get started</h2>
+                <p class="mt-4 text-lg text-zinc-300 font-medium">Up and running in minutes.</p>
+            </div>
+            <div class="max-w-3xl mx-auto space-y-6">
+                <div class="glass p-6 rounded-2xl flex gap-6 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-lg shadow-sm border border-emerald-500/30">1</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2 text-white">Install with one command</h3>
+                        <p class="text-zinc-300 mb-4 leading-relaxed">Run the command below in Terminal. RunBot installs and launches automatically.</p>
+                        <div class="inline-flex items-center glass px-4 py-2 rounded-lg">
+                            <code class="font-mono text-sm overflow-x-auto whitespace-nowrap mr-4 text-zinc-200">curl -fsSL https://eoncode.github.io/run-bot/install.sh | bash</code>
+                            <button onclick="copyInstallCommand(this)" class="p-2 rounded-lg hover:bg-white/10 transition-colors text-zinc-400 hover:text-white focus:outline-none flex-shrink-0" title="Copy to clipboard">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-2xl flex gap-6 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-lg shadow-sm border border-emerald-500/30">2</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2 text-white">Sign in with GitHub</h3>
+                        <p class="text-zinc-300 leading-relaxed">Automatically uses your CLI env <code class="bg-black/20 px-1 py-0.5 rounded border border-white/10">GH_TOKEN</code> / <code class="bg-black/20 px-1 py-0.5 rounded border border-white/10">GITHUB_TOKEN</code> variable. Or sign in with one click via OAuth.</p>
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-2xl flex gap-6 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-lg shadow-sm border border-emerald-500/30">3</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2 text-white">Add a repo or org scope</h3>
+                        <p class="text-zinc-300 leading-relaxed">Pick any repo or org that is available in your account. Monitor a single repo or an entire GitHub org.</p>
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-2xl flex gap-6 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-lg shadow-sm border border-emerald-500/30">4</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2 text-white">Add & manage local runners <span class="text-zinc-500 font-medium text-base ml-2">(optional)</span></h3>
+                        <p class="text-zinc-300 leading-relaxed">Provision new runners or pick up pre-existing ones. Start, stop, or remove them directly from the UI.</p>
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-2xl flex gap-6 items-start">
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center text-lg shadow-sm border border-emerald-500/30">5</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2 text-white">Configure a failure hook <span class="text-zinc-500 font-medium text-base ml-2">(optional)</span></h3>
+                        <p class="text-zinc-300 leading-relaxed">Configure a shell command per repo or branch that sends a prompt to your AI CLI whenever a run fails.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass border-t border-white/10 py-12" style="border-top-width: 1px; border-radius: 0;">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-sm text-zinc-400 font-medium text-center md:text-left leading-relaxed">
+                <p>Requires macOS 26 (Tahoe) or later · Apple Silicon (arm64) only.</p>
+                <p>Built entirely in Swift 6.2 using SwiftUI.</p>
+            </div>
+            <div class="flex space-x-8">
+                <a href="https://github.com/eoncode/run-bot" class="text-zinc-400 hover:text-white font-semibold transition">GitHub</a>
+                <a href="https://github.com/eoncode/run-bot/blob/main/docs/PRIVACY.md" class="text-zinc-400 hover:text-white font-semibold transition">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+        (function () {
+            const nav = document.getElementById("main-nav");
+            if (!nav) return;
+            const onScroll = () => {
+                if (window.scrollY > 10) {
+                    nav.classList.add("glass", "border-zinc-700/50");
+                    nav.classList.remove("border-transparent", "bg-transparent");
+                } else {
+                    nav.classList.remove("glass", "border-zinc-700/50");
+                    nav.classList.add("border-transparent", "bg-transparent");
+                }
+            };
+            onScroll();
+            window.addEventListener("scroll", onScroll, { passive: true });
+        })();
+    </script>
+
+</body>
+</html>
