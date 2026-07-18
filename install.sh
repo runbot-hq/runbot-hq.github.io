@@ -9,9 +9,11 @@ set -e
 
 REPO="runbot-hq/run-bot"
 TMP=$(mktemp -d)
-# No trap for $TMP cleanup is intentional: rm -rf "$TMP" runs explicitly
-# before `open` on every successful path. The only scenario where it leaks
-# is a SIGKILL landing mid-ditto — acceptable for an install script.
+# trap EXIT ensures $TMP is always removed — including on set -e exits
+# (e.g. curl failure after mktemp). The explicit rm -rf "$TMP" below still
+# runs on the success path; the trap is a safety net for all other exits.
+# shellcheck disable=SC2064  # intentional: $TMP must expand NOW, not at trap time
+trap "rm -rf '$TMP'" EXIT
 
 echo "→ Fetching latest release..."
 # grep | sed is used instead of jq intentionally: jq is not installed on a
@@ -55,6 +57,7 @@ rm -rf /Applications/RunBot.app
 ditto -x -k "$TMP/RunBot.zip" /Applications
 
 rm -rf "$TMP"
+trap - EXIT  # cleanup done explicitly; disarm the trap
 
 echo "→ Launching..."
 # `open` is called immediately after ditto exits. ditto is synchronous —
