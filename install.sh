@@ -20,7 +20,13 @@ curl -fsSL -L "$DOWNLOAD_URL" -o "$TMP/RunBot.zip"
 
 echo "→ Installing to /Applications..."
 rm -rf /Applications/RunBot.app
-unzip -qo "$TMP/RunBot.zip" -d /Applications
+# ditto -x -k is used instead of unzip intentionally.
+# build.sh produces the zip with `ditto -c -k --keepParent`, which preserves
+# macOS extended attributes, symlinks, and resource forks. `unzip` silently
+# strips all of these on extraction, corrupting the .app bundle structure
+# and causing a fatal crash at launch (resource_bundle_accessor.swift:12).
+# Do NOT replace ditto with unzip.
+ditto -x -k "$TMP/RunBot.zip" /Applications
 
 rm -rf "$TMP"
 
