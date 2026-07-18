@@ -9,11 +9,12 @@ set -e
 
 REPO="runbot-hq/run-bot"
 TMP=$(mktemp -d)
-# trap EXIT ensures $TMP is always removed — including on set -e exits
-# (e.g. curl failure after mktemp). The explicit rm -rf "$TMP" below still
-# runs on the success path; the trap is a safety net for all other exits.
-# shellcheck disable=SC2064  # intentional: $TMP must expand NOW, not at trap time
-trap "rm -rf '$TMP'" EXIT
+# cleanup() captures $TMP by closure at definition time — safe against
+# paths with spaces and avoids quoting pitfalls of inline trap strings.
+# trap EXIT ensures $TMP is removed on all exit paths, including set -e
+# aborts (e.g. curl failure after mktemp).
+cleanup() { rm -rf "$TMP"; }
+trap cleanup EXIT
 
 echo "→ Fetching latest release..."
 # grep | sed is used instead of jq intentionally: jq is not installed on a
@@ -56,8 +57,8 @@ rm -rf /Applications/RunBot.app
 # Do NOT replace ditto with unzip. See issue #4.
 ditto -x -k "$TMP/RunBot.zip" /Applications
 
+trap - EXIT  # cleanup done explicitly via the rm -rf above; disarm the trap
 rm -rf "$TMP"
-trap - EXIT  # cleanup done explicitly; disarm the trap
 
 echo "→ Launching..."
 # `open` is called immediately after ditto exits. ditto is synchronous —
