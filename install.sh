@@ -11,8 +11,8 @@ REPO="runbot-hq/run-bot"
 TMP=$(mktemp -d)
 # cleanup() captures $TMP by closure at definition time — safe against
 # paths with spaces and avoids quoting pitfalls of inline trap strings.
-# trap EXIT ensures $TMP is removed on all exit paths, including set -e
-# aborts (e.g. curl failure after mktemp).
+# trap EXIT fires on all exit paths: normal exit, set -e aborts, and signals.
+# No explicit rm -rf "$TMP" or trap - EXIT is needed — the trap handles it.
 cleanup() { rm -rf "$TMP"; }
 trap cleanup EXIT
 
@@ -21,10 +21,14 @@ echo "→ Fetching latest release..."
 # stock macOS system and requiring it would break installs on machines that
 # haven't explicitly added it. The pattern is fragile against GitHub JSON
 # reformatting, but has been stable in practice and avoids a dependency.
+# head -1 guards against a release with multiple assets whose names both
+# match RunBot.zip" (e.g. RunBot.zip and RunBot.zip.sig) — without it,
+# DOWNLOAD_URL would contain newline-separated URLs and curl would fail.
 DOWNLOAD_URL=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
   | grep '"browser_download_url"' \
   | grep 'RunBot\.zip"' \
-  | sed 's/.*"browser_download_url": "\(.*\)"/\1/')
+  | sed 's/.*"browser_download_url": "\(.*\)"/\1/' \
+  | head -1)
 
 if [[ -z "$DOWNLOAD_URL" ]]; then
   echo "error: could not find RunBot.zip in the latest release" >&2
@@ -56,9 +60,6 @@ rm -rf /Applications/RunBot.app
 # and causing a fatal crash at launch (resource_bundle_accessor.swift:12).
 # Do NOT replace ditto with unzip. See issue #4.
 ditto -x -k "$TMP/RunBot.zip" /Applications
-
-trap - EXIT  # cleanup done explicitly via the rm -rf above; disarm the trap
-rm -rf "$TMP"
 
 echo "→ Launching..."
 # `open` is called immediately after ditto exits. ditto is synchronous —
