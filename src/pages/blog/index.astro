@@ -9,11 +9,14 @@ const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueO
 const featured: CollectionEntry<'blog'> | undefined = posts[0];
 const rest: CollectionEntry<'blog'>[] = posts.slice(1);
 
-// In Astro 4.x, post.id includes the file extension (e.g. "my-post.md").
-// Strip it to match the clean slugs generated in [...slug].astro.
-// Remove this helper when upgrading to Astro 5 (post.id no longer includes the extension).
-function postPath(id: string) {
-  return `/blog/${id.replace(/\.mdx?$/, '')}`;
+// Builds a clean URL from a post ID.
+// - Strips the .md/.mdx extension (Astro 4.x includes it in post.id; Astro 5 does not —
+//   the replace() is a no-op after upgrading so it can stay until a cleanup pass).
+// - encodeURIComponent guards against filenames with spaces or non-ASCII characters
+//   silently producing broken hrefs. Convention is YYYY-MM-DD-slug (hyphens only)
+//   but this makes it safe regardless.
+function postPath(id: string): string {
+  return `/blog/${id.replace(/\.mdx?$/, '').split('/').map(encodeURIComponent).join('/')}`;
 }
 ---
 <Base title="Blog — RunBot" description="New actions, releases, and what's shipping next.">
@@ -54,13 +57,13 @@ h1{font-size:40px;line-height:1.1;letter-spacing:-.04em;margin:14px 0 12px}
   </div>
 
   {featured && (
-    <div class="featured">
+    <article class="featured">
       <div class="featured-meta">{fmtDate(featured.data.date)}</div>
       <h2 class="featured-title">{featured.data.title}</h2>
       <p class="featured-lead">{featured.data.summary}</p>
       {featured.data.tags.map((t: string) => <span class="tag">{t}</span>)}
       <div><a class="button primary" href={postPath(featured.id)}>Read post →</a></div>
-    </div>
+    </article>
   )}
 
   <div class="grid">
