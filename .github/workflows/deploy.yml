@@ -42,6 +42,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
+      contents: read  # least-privilege: deploy job reads nothing from the repo
+                      # but explicit > implicit for consistency with build job
       pages: write
       id-token: write
     environment:

@@ -14,7 +14,8 @@ const rest: CollectionEntry<'blog'>[] = posts.slice(1);
 .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #bdeef4;background:#effdff;border-radius:999px;color:#087f8c;font-size:13px;font-weight:650}
 section{padding:90px 0}
 .section-head{max-width:650px;margin-bottom:48px}
-h2{font-size:40px;line-height:1.1;letter-spacing:-.04em;margin:14px 0 12px}
+/* h1 is the page title; h2 is the featured post; h3 is grid cards */
+h1{font-size:40px;line-height:1.1;letter-spacing:-.04em;margin:14px 0 12px}
 .section-head p{color:var(--muted);font-size:17px;margin:0}
 .featured{padding:40px;border:1px solid var(--line);border-radius:24px;background:#ffffffc9;box-shadow:0 10px 30px #10182808;margin-bottom:16px}
 .featured-meta{font-size:12px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase;margin-bottom:10px}
@@ -41,14 +42,14 @@ h2{font-size:40px;line-height:1.1;letter-spacing:-.04em;margin:14px 0 12px}
 <section>
   <div class="section-head">
     <div class="eyebrow">Updates</div>
-    <h2>What's new in RunBot.</h2>
+    <h1>What's new in RunBot.</h1>
     <p>New actions, releases, and what's shipping next.</p>
   </div>
 
   {featured && (
     <div class="featured">
       <div class="featured-meta">{fmtDate(featured.data.date)}</div>
-      <h3 class="featured-title">{featured.data.title}</h3>
+      <h2 class="featured-title">{featured.data.title}</h2>
       <p class="featured-lead">{featured.data.summary}</p>
       {featured.data.tags.map((t: string) => <span class="tag">{t}</span>)}
       <div><a class="button primary" href={`/blog/${featured.slug}`}>Read post →</a></div>
