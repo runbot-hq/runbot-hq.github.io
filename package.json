@@ -8,10 +8,6 @@
     "preview": "astro preview"
   },
   "dependencies": {
-    // Pinned to exact version — no caret. Astro has a history of breaking
-    // Content Collections behaviour in minor releases (e.g. post.slug →
-    // post.id in 4.x). Without a lockfile, a caret range means each build
-    // could silently resolve a different version. Upgrade deliberately.
     "astro": "4.11.0"
   }
 }

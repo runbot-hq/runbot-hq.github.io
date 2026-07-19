@@ -32,8 +32,15 @@ tags: [releases]
 
 Push to `main` and the post is live within ~60 seconds.
 
+## Dependency pinning
+
+`astro` is pinned to an exact version (no caret) in `package.json`. Astro has a history of
+breaking Content Collections behaviour in minor releases. Upgrade deliberately by changing
+the version number and verifying the build locally first.
+
 ## Deploy
 
-GitHub Actions builds and deploys on every push to `main` via `.github/workflows/deploy.yml`. No manual steps required.
+GitHub Actions builds and deploys on every push to `main` via `.github/workflows/deploy.yml`.
+No manual steps required.
 
 In repo **Settings → Pages**, source must be set to **GitHub Actions**.
