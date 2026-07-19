@@ -6,11 +6,12 @@ import { fmtDate } from '../../lib/fmtDate';
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map((post) => ({
-    // Catch-all [...slug] rather than [slug] so that post.id values with
-    // path separators (e.g. 2026/my-post from src/content/blog/2026/my-post.md)
-    // are matched correctly. With a single [slug] segment, any subdirectory
-    // post would silently 404 at build time. Flat structure today, future-safe.
-    params: { slug: post.id },
+    // In Astro 4.x, post.id includes the file extension (e.g.
+    // "2026-07-18-ai-pr-review.md"). Strip it so URLs are clean:
+    // /blog/2026-07-18-ai-pr-review rather than /blog/2026-07-18-ai-pr-review.md
+    // In Astro 5, post.id no longer includes the extension — remove this
+    // replace() call when upgrading.
+    params: { slug: post.id.replace(/\.mdx?$/, '') },
     props: { post },
   }));
 }
