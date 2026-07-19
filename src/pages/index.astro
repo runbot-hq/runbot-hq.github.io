@@ -1,0 +1,122 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base>
+<style>
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #bdeef4;background:#effdff;border-radius:999px;color:#087f8c;font-size:13px;font-weight:650}
+.dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px #dff8e8}
+h1{font-size:clamp(48px,7vw,76px);line-height:.98;letter-spacing:-.065em;margin:22px 0 24px;max-width:720px}
+h1 span{background:linear-gradient(110deg,#04aebf,#0a84ff);-webkit-background-clip:text;color:transparent}
+.hero{min-height:650px;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:60px;padding:72px 0 96px}
+.lead{font-size:19px;color:var(--muted);max-width:610px;margin:0 0 30px}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border-radius:12px;font-weight:700;border:1px solid var(--line);background:white;box-shadow:0 1px 2px #1018280a}
+.button.primary{color:white;border-color:#111827;background:#111827}
+.note{margin-top:16px;color:#788396;font-size:13px}
+.visual{position:relative;display:grid;place-items:center}
+.glow{position:absolute;width:430px;height:430px;border-radius:50%;background:#20dbea;filter:blur(70px);opacity:.22}
+.appicon{position:relative;width:min(100%,390px);aspect-ratio:1;object-fit:cover;border-radius:24%;box-shadow:0 30px 80px #087c9540,0 5px 15px #10182824}
+section{padding:90px 0}
+.section-head{max-width:650px;margin-bottom:36px}
+h2{font-size:40px;line-height:1.1;letter-spacing:-.04em;margin:0 0 12px}
+.section-head p{color:var(--muted);font-size:17px;margin:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{padding:25px;border:1px solid var(--line);border-radius:20px;background:#ffffffc9;box-shadow:0 10px 30px #10182808}
+.icon{display:grid;place-items:center;width:40px;height:40px;border-radius:11px;background:#e8fbfd;color:#078d9c;font-size:20px;font-weight:700;line-height:1}
+.icon svg{width:21px;height:21px}
+h3{font-size:18px;margin:18px 0 7px}
+.card p{margin:0;color:var(--muted)}
+.install{display:grid;grid-template-columns:1fr auto;align-items:center;gap:30px;background:#101828;color:white;border-radius:28px;padding:42px}
+.install p{color:#abb4c4;margin:8px 0 0}
+code{display:block;padding:16px 18px;background:#070b12;border:1px solid #30394a;border-radius:12px;color:#b9f6ff;white-space:nowrap;font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;cursor:pointer}
+.copy{font-size:12px;color:#abb4c4;margin-top:8px;text-align:right}
+@media(max-width:780px){
+  .hero{grid-template-columns:1fr;padding:55px 0 75px;text-align:center}
+  .lead{margin-left:auto;margin-right:auto}
+  .actions{justify-content:center}
+  .visual{grid-row:1}
+  .appicon{width:240px}
+  .grid{grid-template-columns:1fr}
+  .install{grid-template-columns:1fr;padding:28px}
+  code{white-space:normal;overflow-wrap:anywhere}
+}
+@media(prefers-color-scheme:dark){
+  .eyebrow{border-color:#235f68;background:#0d282d;color:#78edf3}
+  .dot{box-shadow:0 0 0 4px #163b2a}
+  .button{background:#111823;color:#e8edf3;box-shadow:0 1px 2px #0008}
+  .button.primary{color:#071017;border-color:#63e9f1;background:#63e9f1}
+  .note{color:#8290a3}
+  .appicon{box-shadow:0 30px 90px #11cadb38,0 8px 24px #000a}
+  .card{background:#0d141fdd;box-shadow:0 14px 38px #0005}
+  .icon{background:#12353b;color:#67eaf2}
+  .install{background:linear-gradient(135deg,#101c2b,#0b121d);border:1px solid #29374a}
+  .install code{background:#05080d;border-color:#35445a}
+}
+</style>
+<main>
+  <div class="hero">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> Built for macOS</div>
+      <h1>Your runners.<br /><span>Right at hand.</span></h1>
+      <p class="lead">GitHub Actions and local self-hosted runners, managed from one focused macOS menu bar app.</p>
+      <div class="actions">
+        <a class="button primary" href="#install">Install RunBot ↓</a>
+        <a class="button" href="https://github.com/runbot-hq/run-bot">Explore the source ↗</a>
+      </div>
+      <div class="note">macOS 26+ · Apple Silicon · Swift 6.2 · MIT licensed</div>
+    </div>
+    <div class="visual">
+      <div class="glow"></div>
+      <img class="appicon" src="/appicon.jpg" alt="RunBot app icon" />
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="section-head">
+      <h2>CI control, minus the browser.</h2>
+      <p>See what is running, inspect failures, and manage the machines doing the work.</p>
+    </div>
+    <div class="grid">
+      <article class="card">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div>
+        <h3>Live workflow status</h3>
+        <p>Hierarchical overview of all your workflows. Active jobs are intelligently risen to the surface as they come alive.</p>
+      </article>
+      <article class="card">
+        <div class="icon" aria-hidden="true">⌘</div>
+        <h3>Local runner manager</h3>
+        <p>One control plane for all your local runner needs. Provision new organization or repository runners with one easy click.</p>
+      </article>
+      <article class="card">
+        <div class="icon" aria-hidden="true">✦</div>
+        <h3>AI-powered actions</h3>
+        <p>Utilize your local AI capabilities in CI. Run AI PR reviews, AI localization, and AI release notes.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="install">
+    <div class="install">
+      <div>
+        <h2>Up and running in one command.</h2>
+        <p>Install the latest signed release from GitHub.</p>
+      </div>
+      <div>
+        <code id="cmd" title="Click to copy">curl -fsSL https://runbot-hq.github.io/install.sh | bash</code>
+        <div class="copy" id="copy">Click command to copy</div>
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+  const c = document.getElementById('cmd');
+  const m = document.getElementById('copy');
+  c!.onclick = async () => {
+    await navigator.clipboard.writeText(c!.textContent ?? '');
+    m!.textContent = 'Copied to clipboard ✓';
+    setTimeout(() => (m!.textContent = 'Click command to copy'), 1800);
+  };
+</script>
+</Base>

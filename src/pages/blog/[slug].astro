@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+function fmtDate(d: Date) {
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+---
+<Base title={`${post.data.title} — RunBot`} description={post.data.summary}>
+<style>
+.post-wrap{max-width:680px;margin:0 auto;padding:72px 0 96px}
+.post-meta-line{font-size:12px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase;margin-bottom:12px}
+.post-title{font-size:clamp(32px,5vw,48px);letter-spacing:-.05em;line-height:1.05;margin:0 0 12px;font-weight:800}
+.post-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:32px}
+.tag{display:inline-flex;align-self:flex-start;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:#e8fbfd;color:#078d9c;border:1px solid #bdeef4}
+.post-body{color:var(--muted);font-size:16px;line-height:1.75;margin-bottom:48px}
+.post-body :global(h2){font-size:22px;color:var(--ink);letter-spacing:-.03em;margin:36px 0 12px}
+.post-body :global(p){margin:0 0 18px}
+.post-body :global(code){padding:2px 7px;background:var(--line);border-radius:5px;font-size:13px;font-family:ui-monospace,monospace}
+.post-body :global(pre){background:#070b12;border:1px solid #253041;border-radius:14px;padding:20px;overflow-x:auto;margin:20px 0}
+.post-body :global(pre code){background:none;color:#b9f6ff;padding:0}
+.button{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;font-weight:700;font-size:14px;border:1px solid var(--line);background:white;box-shadow:0 1px 2px #1018280a}
+.divider{border:none;border-top:1px solid var(--line);margin:0}
+@media(prefers-color-scheme:dark){
+  .tag{background:#12353b;color:#67eaf2;border-color:#235f68}
+  .button{background:#111823;color:#e8edf3}
+}
+</style>
+<hr class="divider" />
+<div class="post-wrap">
+  <div class="post-meta-line">{fmtDate(post.data.date)}</div>
+  <h1 class="post-title">{post.data.title}</h1>
+  <div class="post-tags">
+    {post.data.tags.map((t: string) => <span class="tag">{t}</span>)}
+  </div>
+  <div class="post-body"><Content /></div>
+  <a class="button" href="/blog">← All posts</a>
+</div>
+</Base>
