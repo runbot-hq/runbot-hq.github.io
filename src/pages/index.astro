@@ -42,6 +42,7 @@ h3{font-size:18px;margin:18px 0 7px}
 .install{display:grid;grid-template-columns:1fr auto;align-items:center;gap:30px;background:#101828;color:white;border-radius:28px;padding:42px}
 .install p{color:#abb4c4;margin:8px 0 0}
 code{display:block;padding:16px 18px;background:#070b12;border:1px solid #30394a;border-radius:12px;color:#b9f6ff;white-space:nowrap;font:13px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;cursor:pointer}
+code:focus{outline:2px solid #63e9f1;outline-offset:2px}
 .copy{font-size:12px;color:#abb4c4;margin-top:8px;text-align:right}
 @media(max-width:780px){
   .hero{grid-template-columns:1fr;padding:55px 0 75px;text-align:center}
@@ -117,8 +118,14 @@ code{display:block;padding:16px 18px;background:#070b12;border:1px solid #30394a
         <p>Install the latest signed release from GitHub.</p>
       </div>
       <div>
-        <code id="cmd" title="Click to copy">{CMD}</code>
-        <div class="copy" id="copy">Click command to copy</div>
+        <code
+          id="cmd"
+          title="Click to copy"
+          tabindex="0"
+          role="button"
+          aria-label="Copy install command to clipboard"
+        >{CMD}</code>
+        <div class="copy" id="copy" aria-live="polite">Click command to copy</div>
       </div>
     </div>
   </section>
@@ -126,7 +133,8 @@ code{display:block;padding:16px 18px;background:#070b12;border:1px solid #30394a
 <script define:vars={{ CMD }}>
   const c = document.getElementById('cmd');
   const m = document.getElementById('copy');
-  c.onclick = async () => {
+
+  async function copyCmd() {
     try {
       await navigator.clipboard.writeText(CMD);
       m.textContent = 'Copied to clipboard ✓';
@@ -136,6 +144,12 @@ code{display:block;padding:16px 18px;background:#070b12;border:1px solid #30394a
       // Falls back gracefully in local dev (served over HTTP).
       m.textContent = 'Copy failed — select manually';
     }
-  };
+  }
+
+  c.onclick = copyCmd;
+  // Keyboard support: Enter and Space trigger copy, matching button semantics.
+  // role="button" + tabindex="0" on the <code> element makes this reachable
+  // via Tab for keyboard-only and assistive technology users.
+  c.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyCmd(); } };
 </script>
 </Base>
