@@ -16,7 +16,11 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # intentionally unpinned — ubuntu-latest image changes
+                            # are inconsequential for a static site build with no
+                            # OS-sensitive native dependencies. Pinning to a specific
+                            # image (e.g. ubuntu-24.04) adds maintenance burden with
+                            # no security benefit here. Revisit if native deps are added.
     permissions:
       contents: read  # least-privilege: build only needs to read the repo
     steps:
@@ -43,7 +47,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # intentionally unpinned — see build job comment above
     permissions:
       contents: read  # explicit > implicit; deploy job does not write to repo
       pages: write

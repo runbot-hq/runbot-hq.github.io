@@ -6,6 +6,13 @@ import { fmtDate } from '../../lib/fmtDate';
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map((post) => ({
+    // [...slug] (catch-all) is used intentionally rather than [slug] (single-segment).
+    // Rationale: if a post ever lives in a subdirectory of src/content/blog/
+    // (e.g. 2026/07-post.md), post.id will contain a slash. A plain [slug] route
+    // would 404 on that path; [...slug] handles it correctly. All current posts
+    // are flat-named so params.slug is always a string today — Astro 4 coerces
+    // this correctly. Do not rename this file to [slug].astro.
+    //
     // In Astro 4.x, post.id includes the file extension (e.g.
     // "2026-07-18-ai-pr-review.md"). Strip it so URLs are clean:
     // /blog/2026-07-18-ai-pr-review rather than /blog/2026-07-18-ai-pr-review.md
