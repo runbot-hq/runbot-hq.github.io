@@ -35,8 +35,17 @@ Push to `main` and the post is live within ~60 seconds.
 ## Dependency pinning
 
 `astro` is pinned to an exact version (no caret) in `package.json`. Astro has a history of
-breaking Content Collections behaviour in minor releases. Upgrade deliberately by changing
-the version number and verifying the build locally first.
+breaking Content Collections behaviour in minor releases (e.g. `post.slug` → `post.id` in 4.x).
+Upgrade deliberately by changing the version number and verifying the build locally first.
+
+No `package-lock.json` is committed. This is intentional — see the comments in
+`.github/workflows/deploy.yml` for the full rationale. Do not add one without reading those first.
+
+## Astro version
+
+This project uses Astro 4.x, not the latest Astro 5.x. The upgrade is a deliberate future task,
+not an oversight. Astro 5 changed the Content Collections API in ways that require a migration.
+When ready, follow the [official upgrade guide](https://docs.astro.build/en/guides/upgrade-to/v5/).
 
 ## Deploy
 

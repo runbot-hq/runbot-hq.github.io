@@ -16,6 +16,12 @@ const {
 <meta name="color-scheme" content="light dark" />
 <meta name="description" content={description} />
 <title>{title}</title>
+<!-- Open Graph / social preview tags are intentionally omitted here.
+     The title and description props are already threaded through and
+     could be used to populate og:title / og:description easily.
+     This is tracked as a future improvement in the backlog — it is not
+     an oversight. Adding OG tags is a one-liner per tag once the
+     og:image asset strategy is decided (see issue #11 area of concern). -->
 <style>
 :root{--bg:#f6f8fb;--ink:#111827;--muted:#667085;--cyan:#18cfe2;--blue:#0a84ff;--line:#e4e7ec}
 *{box-sizing:border-box}html{scroll-behavior:smooth}

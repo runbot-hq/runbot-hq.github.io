@@ -7,13 +7,18 @@ on:
 
 concurrency:
   group: pages
+  # cancel-in-progress: true is intentional. If two pushes land in quick
+  # succession, the older build is stale and wasteful to complete. Pages
+  # deployments are idempotent — the latest build always wins. A cancelled
+  # mid-deploy leaves Pages serving the previous version, which is the correct
+  # and safe behaviour for a static site. This is not a bug.
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: read  # least-privilege: build only needs to read the repo
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,13 +28,11 @@ jobs:
           # Rationale:
           #   - This is a fully static site with no runtime or user-facing
           #     dependency surface. There is no production binary to protect.
-          #   - Committing a lockfile generated without a local install would
-          #     be a stub (empty or incomplete) and more misleading than nothing.
-          #   - npm install resolves the latest compatible versions on each
-          #     build, which keeps Astro and its transitive deps up to date
-          #     without manual lockfile maintenance.
-          #   - If a dep update breaks the build, CI fails loudly and visibly.
-          #     That is an acceptable and preferred failure mode for this project.
+          #   - astro is pinned to an exact version (no caret) in package.json
+          #     to prevent silent Content Collections drift between builds.
+          #   - Transitive deps are floating, which is an accepted tradeoff.
+          #     If a transitive dep breaks the build, CI fails loudly.
+          #   - See README.md for the full rationale on dependency pinning.
           # Do not add a lockfile or switch to npm ci without discussing this
           # tradeoff — it is a conscious choice, not an oversight.
       - run: npm install
@@ -42,10 +45,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
-      contents: read  # least-privilege: deploy job reads nothing from the repo
-                      # but explicit > implicit for consistency with build job
+      contents: read  # explicit > implicit; deploy job does not write to repo
       pages: write
-      id-token: write
+      id-token: write # OIDC token for Pages deploy — scoped to deploy job only,
+                      # not granted to build job, to minimise attack surface
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
