@@ -19,14 +19,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          # No cache: npm here — caching requires a lockfile (npm ci).
-          # We intentionally do not commit package-lock.json so each build
-          # resolves the latest compatible versions. For a static marketing
-          # site this is preferable to lockfile drift going unnoticed.
-      - # npm install rather than npm ci: we have no committed lockfile by
-        # design. npm ci would hard-fail without one. npm install resolves
-        # fresh on every build, which is the intended behaviour here.
-        run: npm install
+          # No lockfile is committed to this repo — this is intentional.
+          # Rationale:
+          #   - This is a fully static site with no runtime or user-facing
+          #     dependency surface. There is no production binary to protect.
+          #   - Committing a lockfile generated without a local install would
+          #     be a stub (empty or incomplete) and more misleading than nothing.
+          #   - npm install resolves the latest compatible versions on each
+          #     build, which keeps Astro and its transitive deps up to date
+          #     without manual lockfile maintenance.
+          #   - If a dep update breaks the build, CI fails loudly and visibly.
+          #     That is an acceptable and preferred failure mode for this project.
+          # Do not add a lockfile or switch to npm ci without discussing this
+          # tradeoff — it is a conscious choice, not an oversight.
+      - run: npm install
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
