@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
+
+const CMD = 'curl -fsSL https://runbot-hq.github.io/install.sh | bash';
 ---
 <Base>
 <style>
@@ -104,19 +106,23 @@ code{display:block;padding:16px 18px;background:#070b12;border:1px solid #30394a
         <p>Install the latest signed release from GitHub.</p>
       </div>
       <div>
-        <code id="cmd" title="Click to copy">curl -fsSL https://runbot-hq.github.io/install.sh | bash</code>
+        <code id="cmd" title="Click to copy">{CMD}</code>
         <div class="copy" id="copy">Click command to copy</div>
       </div>
     </div>
   </section>
 </main>
-<script>
+<script define:vars={{ CMD }}>
   const c = document.getElementById('cmd');
   const m = document.getElementById('copy');
-  c!.onclick = async () => {
-    await navigator.clipboard.writeText(c!.textContent ?? '');
-    m!.textContent = 'Copied to clipboard ✓';
-    setTimeout(() => (m!.textContent = 'Click command to copy'), 1800);
+  c.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(CMD);
+      m.textContent = 'Copied to clipboard ✓';
+      setTimeout(() => (m.textContent = 'Click command to copy'), 1800);
+    } catch {
+      m.textContent = 'Copy failed — select manually';
+    }
   };
 </script>
 </Base>

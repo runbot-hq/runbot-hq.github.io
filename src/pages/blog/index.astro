@@ -1,14 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { fmtDate } from '../../lib/fmtDate';
 
 const allPosts = await getCollection('blog');
 const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const [featured, ...rest] = posts;
-
-function fmtDate(d: Date) {
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-}
+const [featured, ...rest]: [CollectionEntry<'blog'> | undefined, CollectionEntry<'blog'>[]] = [posts[0], posts.slice(1)];
 ---
 <Base title="Blog — RunBot" description="New actions, releases, and what's shipping next.">
 <style>
@@ -49,7 +47,7 @@ h2{font-size:40px;line-height:1.1;letter-spacing:-.04em;margin:14px 0 12px}
   {featured && (
     <div class="featured">
       <div class="featured-meta">{fmtDate(featured.data.date)}</div>
-      <h2 class="featured-title">{featured.data.title}</h2>
+      <h3 class="featured-title">{featured.data.title}</h3>
       <p class="featured-lead">{featured.data.summary}</p>
       {featured.data.tags.map((t: string) => <span class="tag">{t}</span>)}
       <div><a class="button primary" href={`/blog/${featured.slug}`}>Read post →</a></div>
