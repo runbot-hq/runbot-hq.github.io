@@ -6,7 +6,8 @@ import { fmtDate } from '../../lib/fmtDate';
 
 const allPosts = await getCollection('blog');
 const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const [featured, ...rest]: [CollectionEntry<'blog'> | undefined, CollectionEntry<'blog'>[]] = [posts[0], posts.slice(1)];
+const featured: CollectionEntry<'blog'> | undefined = posts[0];
+const rest: CollectionEntry<'blog'>[] = posts.slice(1);
 ---
 <Base title="Blog — RunBot" description="New actions, releases, and what's shipping next.">
 <style>
