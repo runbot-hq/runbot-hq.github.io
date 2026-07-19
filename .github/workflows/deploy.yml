@@ -19,7 +19,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
+          # No cache: npm here — caching requires a lockfile (npm ci).
+          # We intentionally do not commit package-lock.json so each build
+          # resolves the latest compatible versions. For a static marketing
+          # site this is preferable to lockfile drift going unnoticed.
+      - # npm install rather than npm ci: we have no committed lockfile by
+        # design. npm ci would hard-fail without one. npm install resolves
+        # fresh on every build, which is the intended behaviour here.
+        run: npm install
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
