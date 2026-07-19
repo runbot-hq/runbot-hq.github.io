@@ -22,10 +22,10 @@ const { Content } = await render(post); // post.render() is deprecated in Astro 
 <Base title={`${post.data.title} — RunBot`} description={post.data.summary}>
 <style>
 .post-wrap{max-width:680px;margin:0 auto;padding:72px 0 96px}
-.post-meta-line{font-size:12px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase;margin-bottom:12px}
-.post-title{font-size:clamp(32px,5vw,48px);letter-spacing:-.05em;line-height:1.05;margin:0 0 12px;font-weight:800}
-.post-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:32px}
+.post-meta-line{font-size:12px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase;margin-bottom:10px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .tag{display:inline-flex;align-self:flex-start;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:#e8fbfd;color:#078d9c;border:1px solid #bdeef4}
+.post-title{font-size:clamp(32px,5vw,48px);letter-spacing:-.05em;line-height:1.05;margin:0 0 32px;font-weight:800}
 .post-body{color:var(--muted);font-size:16px;line-height:1.75;margin-bottom:48px}
 .post-body :global(h2){font-size:22px;color:var(--ink);letter-spacing:-.03em;margin:36px 0 12px}
 .post-body :global(p){margin:0 0 18px}
@@ -42,10 +42,8 @@ const { Content } = await render(post); // post.render() is deprecated in Astro 
 <hr class="divider" />
 <div class="post-wrap">
   <div class="post-meta-line">{fmtDate(post.data.date)}</div>
+  <div class="tags">{post.data.tags.map((t: string) => <span class="tag">{t}</span>)}</div>
   <h1 class="post-title">{post.data.title}</h1>
-  <div class="post-tags">
-    {post.data.tags.map((t: string) => <span class="tag">{t}</span>)}
-  </div>
   <div class="post-body"><Content /></div>
   <a class="button" href="/blog">← All posts</a>
 </div>
