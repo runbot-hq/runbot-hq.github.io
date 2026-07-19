@@ -6,7 +6,9 @@ import { fmtDate } from '../../lib/fmtDate';
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.id }, // post.slug is deprecated in Astro 4+; post.id
+                               // equals the filename without extension and is
+                               // the recommended stable identifier going forward
     props: { post },
   }));
 }
