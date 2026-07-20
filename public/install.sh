@@ -3,8 +3,16 @@
 # • -u is omitted because this script uses no parameter-default expansions
 #   that would be unsafe, but has not been fully audited for every variable
 #   reference. Deferred until a full audit is done.
-# • -o pipefail is omitted — the grep | sed pipeline below is the only pipe
-#   and a failure there is already caught by the DOWNLOAD_URL empty-check.
+# • -o pipefail is omitted — the grep | sed | head pipeline is the only pipe
+#   in this script. Its failure modes are handled in two distinct layers:
+#     1. Empty output (grep finds nothing, curl fails): caught by the
+#        DOWNLOAD_URL empty-check below, which exits with a clear error.
+#     2. Corrupt/partial output (malformed JSON producing a non-empty but
+#        bad URL): mitigated by the non-greedy [^"]* sed pattern (can't
+#        capture past the closing quote) and head -1 (takes only the first
+#        line). A malformed URL that slips through will cause the curl
+#        download to fail with a clear error — it will not silently succeed.
+#   If a second pipeline is ever added to this script, revisit pipefail.
 set -e
 
 REPO="runbot-hq/run-bot"
@@ -24,7 +32,7 @@ echo "→ Fetching latest release..."
 # head -1 guards against a release with multiple assets whose names both
 # match RunBot.zip" (e.g. RunBot.zip and RunBot.zip.sig) — without it,
 # DOWNLOAD_URL would contain newline-separated URLs and curl would fail.
-# [^"]*  (non-greedy equivalent for BRE) is used on the right side of the
+# [^"]* (non-greedy equivalent for BRE) is used on the right side of the
 # sed match instead of .* to prevent a URL containing " from capturing too
 # far and producing a malformed URL that passes the empty-string guard below.
 DOWNLOAD_URL=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
