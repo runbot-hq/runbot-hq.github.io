@@ -24,6 +24,20 @@ jobs:
     permissions:
       contents: read  # least-privilege: build only needs to read the repo
     steps:
+      # Actions are pinned by tag (@v4, @v3), not by commit SHA.
+      # This is a deliberate tradeoff for a static marketing site:
+      #   - All four actions (checkout, setup-node, upload-pages-artifact,
+      #     deploy-pages) are first-party GitHub-owned actions. The risk of a
+      #     malicious tag move on github.com/actions/* is materially lower than
+      #     for third-party actions.
+      #   - SHA-pinning requires manual updates on every action release and
+      #     adds maintenance burden with negligible security benefit for this
+      #     threat model.
+      #   - The deploy job's blast radius is limited to GitHub Pages content —
+      #     it cannot write to the repo (contents: read) or access secrets
+      #     beyond the scoped OIDC token.
+      # Revisit SHA-pinning if third-party actions are ever added, or if this
+      # workflow gains access to secrets or write permissions beyond pages.
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:

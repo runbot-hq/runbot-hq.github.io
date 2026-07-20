@@ -23,8 +23,12 @@ export async function GET(context) {
       title: post.data.title,
       pubDate: post.data.date,
       description: post.data.summary,
-      // postPath() is the single source of truth for URL construction —
-      // shared with blog/index.astro and [...slug].astro. See src/lib/postPath.ts.
+      // postPath() returns a root-relative path (e.g. /blog/2026-07-18-ai-pr-review).
+      // @astrojs/rss resolves root-relative paths against context.site automatically,
+      // producing a valid absolute URL in the RSS output. This is documented
+      // behaviour in @astrojs/rss — not an implicit contract. If postPath() ever
+      // changes to return a path without a leading slash, this will break.
+      // postPath() is the single source of truth — see src/lib/postPath.ts.
       link: postPath(post.id),
     })),
     customData: '<language>en-us</language>',

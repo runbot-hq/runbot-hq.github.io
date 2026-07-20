@@ -42,10 +42,15 @@ echo "→ Downloading RunBot..."
 curl -fsSL -L "$DOWNLOAD_URL" -o "$TMP/RunBot.zip"
 
 # ⚠️  No checksum verification here — deferred to a future hardening pass.
-# The release zip is served over HTTPS from GitHub's CDN. A .sig sidecar
-# (Ed25519) is available alongside the zip in the GitHub Release for clients
-# that want to verify integrity. install.sh currently skips that step;
-# adding it is tracked as a future improvement.
+# Scope of the gap: HTTPS protects against network MITM. What is NOT covered
+# is a compromised GitHub release asset (e.g. a token leak leading to a
+# re-uploaded zip). A .sig sidecar (Ed25519) is available alongside the zip
+# in the GitHub Release for clients that want to verify integrity.
+# install.sh currently skips that step; adding it is tracked in issue #11
+# (supply-chain hardening) and is a deliberate deferral, not an oversight.
+# The installed .app is also signed and notarized by Apple — macOS Gatekeeper
+# will block an unsigned or tampered binary from executing regardless.
+# Do not remove this comment when wiring up verification in #11; update it.
 
 echo "→ Installing to /Applications..."
 # rm -rf is intentional and safe: the path is the hardcoded string
