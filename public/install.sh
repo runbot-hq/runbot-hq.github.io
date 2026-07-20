@@ -26,7 +26,10 @@
 set -e
 
 REPO="runbot-hq/run-bot"
-TMP=$(mktemp -d)
+# Guard mktemp: if /tmp is full or unwritable, fail immediately with a clear
+# message. Without this, TMP would be empty and subsequent paths like
+# "$TMP/RunBot.zip" would silently resolve to "/RunBot.zip".
+TMP=$(mktemp -d) || { echo "error: mktemp failed — is /tmp writable?" >&2; exit 1; }
 # cleanup() captures $TMP by closure at definition time — safe against
 # paths with spaces and avoids quoting pitfalls of inline trap strings.
 # trap EXIT fires on all exit paths: normal exit, set -e aborts, and signals.

@@ -11,11 +11,20 @@ import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';
 import { postPath } from '../lib/postPath';
 
-// APIContext types context.site as URL | undefined. If `site` is ever removed
-// from astro.config.mjs, TypeScript will surface the undefined case here at
-// build time rather than silently producing broken RSS <link> URLs at runtime.
 export async function GET(context: APIContext) {
   const posts = await getCollection('blog');
+
+  // Explicit guard: @astrojs/rss accepts `string | URL | undefined` for site,
+  // so TypeScript alone will not catch a missing `site` in astro.config.mjs.
+  // This throws at build time (during `astro build`) with a clear message
+  // rather than silently producing an RSS feed with broken <link> URLs.
+  if (!context.site) {
+    throw new Error(
+      'rss.xml.ts: context.site is undefined. ' +
+      'Ensure `site` is set in astro.config.mjs.'
+    );
+  }
+
   // post.data.date is already a Date object — enforced by z.coerce.date() in
   // src/content/config.ts. .valueOf() is sufficient; wrapping in new Date()
   // again would be redundant.
@@ -23,9 +32,9 @@ export async function GET(context: APIContext) {
   return rss({
     title: 'RunBot Blog',
     description: 'Release notes, guides, and updates from the RunBot team — GitHub Actions and local runners in your macOS menu bar.',
-    // context.site resolves to 'https://runbot-hq.github.io' (set in
-    // astro.config.mjs). The rss() helper uses it to produce absolute URLs
-    // for each <link> — valid per RSS spec. No manual concatenation needed.
+    // context.site is a URL object (guaranteed non-undefined by the guard above).
+    // The rss() helper uses it to produce absolute URLs for each <link> —
+    // valid per RSS spec. No manual concatenation needed.
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,
