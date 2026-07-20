@@ -3,21 +3,12 @@ import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { fmtDate } from '../../lib/fmtDate';
+import { postPath } from '../../lib/postPath';
 
 const allPosts = await getCollection('blog');
 const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const featured: CollectionEntry<'blog'> | undefined = posts[0];
 const rest: CollectionEntry<'blog'>[] = posts.slice(1);
-
-// Builds a clean URL from a post ID.
-// - Strips the .md/.mdx extension (Astro 4.x includes it in post.id; Astro 5 does not —
-//   the replace() is a no-op after upgrading so it can stay until a cleanup pass).
-// - encodeURIComponent guards against filenames with spaces or non-ASCII characters
-//   silently producing broken hrefs. Convention is YYYY-MM-DD-slug (hyphens only)
-//   but this makes it safe regardless.
-function postPath(id: string): string {
-  return `/blog/${id.replace(/\.mdx?$/, '').split('/').map(encodeURIComponent).join('/')}`;
-}
 ---
 <Base title="Blog — RunBot" description="New actions, releases, and what's shipping next.">
 <style>

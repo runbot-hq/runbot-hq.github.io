@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "astro": "4.11.0",
-    "@astrojs/rss": "^4.0.0"
+    "@astrojs/rss": "4.0.11"
   }
 }

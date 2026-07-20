@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { fmtDate } from '../../lib/fmtDate';
+import { postPath } from '../../lib/postPath';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -13,12 +14,12 @@ export async function getStaticPaths() {
     // are flat-named so params.slug is always a string today — Astro 4 coerces
     // this correctly. Do not rename this file to [slug].astro.
     //
-    // In Astro 4.x, post.id includes the file extension (e.g.
-    // "2026-07-18-ai-pr-review.md"). Strip it so URLs are clean:
-    // /blog/2026-07-18-ai-pr-review rather than /blog/2026-07-18-ai-pr-review.md
-    // In Astro 5, post.id no longer includes the extension — remove this
-    // replace() call when upgrading.
-    params: { slug: post.id.replace(/\.mdx?$/, '') },
+    // postPath() strips the file extension and encodes each path segment.
+    // It is the single source of truth for slug construction — also used by
+    // blog/index.astro and rss.xml.js so all three stay in sync.
+    // Remove the extension-stripping step inside postPath when upgrading to
+    // Astro 5 (post.id no longer includes it).
+    params: { slug: postPath(post.id).replace(/^\/blog\//, '') },
     props: { post },
   }));
 }

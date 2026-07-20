@@ -124,7 +124,6 @@ code:focus{outline:2px solid #63e9f1;outline-offset:2px}
           tabindex="0"
           role="button"
           aria-label="Copy install command to clipboard"
-          aria-pressed="false"
         >{CMD}</code>
         <div class="copy" id="copy" aria-live="polite">Click command to copy</div>
       </div>
@@ -138,11 +137,9 @@ code:focus{outline:2px solid #63e9f1;outline-offset:2px}
   async function copyCmd() {
     try {
       await navigator.clipboard.writeText(CMD);
-      c.setAttribute('aria-pressed', 'true');
       m.textContent = 'Copied to clipboard ✓';
       setTimeout(() => {
         m.textContent = 'Click command to copy';
-        c.setAttribute('aria-pressed', 'false');
       }, 1800);
     } catch {
       // navigator.clipboard is only available in secure contexts (HTTPS).
