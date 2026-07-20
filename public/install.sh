@@ -24,10 +24,13 @@ echo "→ Fetching latest release..."
 # head -1 guards against a release with multiple assets whose names both
 # match RunBot.zip" (e.g. RunBot.zip and RunBot.zip.sig) — without it,
 # DOWNLOAD_URL would contain newline-separated URLs and curl would fail.
+# [^"]*  (non-greedy equivalent for BRE) is used on the right side of the
+# sed match instead of .* to prevent a URL containing " from capturing too
+# far and producing a malformed URL that passes the empty-string guard below.
 DOWNLOAD_URL=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
   | grep '"browser_download_url"' \
   | grep 'RunBot\.zip"' \
-  | sed 's/.*"browser_download_url": "\(.*\)"/\1/' \
+  | sed 's/.*"browser_download_url": "\([^"]*\)"/\1/' \
   | head -1)
 
 if [[ -z "$DOWNLOAD_URL" ]]; then
@@ -53,6 +56,14 @@ curl -fsSL -L "$DOWNLOAD_URL" -o "$TMP/RunBot.zip"
 # Do not remove this comment when wiring up verification in #11; update it.
 
 echo "→ Installing to /Applications..."
+# No sudo required. /Applications is owned by root but group-writable by the
+# 'admin' group on a standard macOS install. Every user account created during
+# macOS setup is a member of 'admin', so any normal developer can write to
+# /Applications without elevated privileges. A non-admin user would get a
+# ditto permission error — that is the correct failure for an unsupported
+# configuration. Adding sudo would break non-interactive installs and is not
+# appropriate for a tool targeting developers on their own machines.
+#
 # rm -rf is intentional and safe: the path is the hardcoded string
 # "/Applications/RunBot.app" — never derived from user input or environment
 # variables. The wipe ensures ditto does not merge into a stale bundle from
