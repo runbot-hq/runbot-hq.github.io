@@ -1,5 +1,5 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import { fmtDate } from '../../lib/fmtDate';
 
@@ -24,7 +24,13 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post); // post.render() is deprecated in Astro 4+
+// post.render() is the correct Astro 4.x API. The standalone render() named
+// import from astro:content was introduced in Astro 5 — it does not exist in
+// Astro 4 and will cause a build-time module resolution error.
+// When upgrading to Astro 5, replace with:
+//   import { getCollection, render } from 'astro:content';
+//   const { Content } = await render(post);
+const { Content } = await post.render();
 ---
 <Base title={`${post.data.title} — RunBot`} description={post.data.summary}>
 <style>
