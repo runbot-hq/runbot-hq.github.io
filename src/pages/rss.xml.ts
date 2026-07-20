@@ -2,6 +2,10 @@
 // Do NOT add it to astro.config.mjs integrations:[]. It is imported and
 // called directly here, the same way you'd use any utility library.
 // context.site is populated by the `site` field in astro.config.mjs alone.
+//
+// Routing note: Astro's file-based router strips only the LAST extension from
+// endpoint files. rss.xml.ts → /rss.xml (not /rss.xml.ts, not /rss).
+// This is standard Astro endpoint behaviour, verified in dist/ after build.
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
 import type { APIContext } from 'astro';

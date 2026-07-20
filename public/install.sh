@@ -4,15 +4,25 @@
 #   that would be unsafe, but has not been fully audited for every variable
 #   reference. Deferred until a full audit is done.
 # • -o pipefail is omitted — the grep | sed | head pipeline is the only pipe
-#   in this script. Its failure modes are handled in two distinct layers:
-#     1. Empty output (grep finds nothing, curl fails): caught by the
-#        DOWNLOAD_URL empty-check below, which exits with a clear error.
-#     2. Corrupt/partial output (malformed JSON producing a non-empty but
-#        bad URL): mitigated by the non-greedy [^"]* sed pattern (can't
-#        capture past the closing quote) and head -1 (takes only the first
-#        line). A malformed URL that slips through will cause the curl
-#        download to fail with a clear error — it will not silently succeed.
-#   If a second pipeline is ever added to this script, revisit pipefail.
+#   in this script. Its failure modes are handled as follows:
+#
+#   a) curl fails (network error, HTTP 4xx/5xx including 403 rate-limit):
+#      curl -f exits non-zero — set -e aborts immediately. The user sees
+#      curl's own error output (e.g. "curl: (22) The requested URL returned
+#      error: 403"). This is a clear, actionable message. No silent failure.
+#
+#   b) curl succeeds but returns unexpected JSON (e.g. a GitHub maintenance
+#      response with no browser_download_url): grep exits 1 inside $(...) —
+#      on bash 3.2 (stock macOS /usr/bin/env bash), set -e does NOT propagate
+#      inside command substitution. DOWNLOAD_URL becomes empty; the [[ -z ]]
+#      guard below catches it and exits with a clear error message.
+#
+#   c) Corrupt/partial URL (malformed JSON producing non-empty bad output):
+#      mitigated by [^"]* (non-greedy, can't overrun the closing quote) and
+#      head -1 (single line). A bad URL causes the download curl to fail
+#      loudly — not a silent success.
+#
+#   If a second pipeline is ever added to this script, add pipefail then.
 set -e
 
 REPO="runbot-hq/run-bot"
