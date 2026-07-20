@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="404 — Page not found — RunBot" description="This page does not exist.">
+<style>
+.not-found{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:96px 20px 120px;
+  gap:24px;
+}
+.not-found img{
+  width:80px;
+  height:80px;
+  border-radius:20px;
+  object-fit:cover;
+  opacity:.9;
+}
+.not-found h1{
+  font-size:clamp(64px,12vw,96px);
+  font-weight:800;
+  letter-spacing:-.05em;
+  margin:0;
+  line-height:1;
+  color:var(--ink);
+}
+.not-found p{
+  font-size:18px;
+  color:var(--muted);
+  margin:0;
+  max-width:360px;
+  line-height:1.5;
+}
+.not-found a{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:10px 20px;
+  border-radius:10px;
+  font-weight:700;
+  font-size:14px;
+  border:1px solid var(--line);
+  background:white;
+  box-shadow:0 1px 2px #1018280a;
+  color:var(--ink);
+}
+@media(prefers-color-scheme:dark){
+  .not-found a{background:#111823;color:#e8edf3;}
+}
+</style>
+<div class="not-found">
+  <img src="/icon.jpg" alt="RunBot" />
+  <h1>404</h1>
+  <p>This page does not exist.</p>
+  <a href="/">← Back to home</a>
+</div>
+</Base>

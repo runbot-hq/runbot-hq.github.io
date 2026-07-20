@@ -2,11 +2,15 @@
 interface Props {
   title?: string;
   description?: string;
+  /** Canonical URL for this page. Defaults to the current page URL. */
+  canonical?: string;
 }
 const {
   title = 'RunBot — GitHub runners, at a glance',
   description = 'RunBot — GitHub Actions and local runners in your macOS menu bar.',
+  canonical = Astro.url.href,
 } = Astro.props;
+const ogImage = 'https://runbot-hq.github.io/icon.jpg';
 ---
 <!doctype html>
 <html lang="en">
@@ -16,12 +20,19 @@ const {
 <meta name="color-scheme" content="light dark" />
 <meta name="description" content={description} />
 <title>{title}</title>
-<!-- Open Graph / social preview tags are intentionally omitted here.
-     The title and description props are already threaded through and
-     could be used to populate og:title / og:description easily.
-     This is tracked as a future improvement in the backlog — it is not
-     an oversight. Adding OG tags is a one-liner per tag once the
-     og:image asset strategy is decided (see issue #11 area of concern). -->
+<link rel="canonical" href={canonical} />
+<!-- Open Graph / social preview -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:site_name" content="RunBot" />
+<!-- Twitter / X card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
 <style>
 :root{--bg:#f6f8fb;--ink:#111827;--muted:#667085;--cyan:#18cfe2;--blue:#0a84ff;--line:#e4e7ec}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
