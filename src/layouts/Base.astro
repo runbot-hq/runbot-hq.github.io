@@ -1,0 +1,77 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  /** Canonical URL for this page. Defaults to the current page URL. */
+  canonical?: string;
+}
+const {
+  title = 'RunBot — GitHub runners, at a glance',
+  description = 'RunBot — GitHub Actions and local runners in your macOS menu bar.',
+  canonical = Astro.url.href,
+} = Astro.props;
+const ogImage = 'https://runbot-hq.github.io/icon.jpg';
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<meta name="description" content={description} />
+<title>{title}</title>
+<link rel="canonical" href={canonical} />
+<!-- Open Graph / social preview -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:site_name" content="RunBot" />
+<!-- Twitter / X card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<style>
+:root{--bg:#f6f8fb;--ink:#111827;--muted:#667085;--cyan:#18cfe2;--blue:#0a84ff;--line:#e4e7ec}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font:15px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 50% -10%,#d9fbff 0,rgba(217,251,255,0) 38%),var(--bg)}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1080px,calc(100% - 40px));margin:auto}
+nav{height:72px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-weight:750;font-size:18px;letter-spacing:-.02em}
+.brand img{width:34px;height:34px;border-radius:9px;object-fit:cover}
+.navlinks{display:flex;gap:10px;align-items:center}
+.navlinks a{padding:9px 13px;color:#475467}
+.navlinks .pill{color:white;background:#111827;border-radius:999px}
+footer{display:flex;justify-content:space-between;align-items:center;padding:30px 0 45px;color:#7b8493;border-top:1px solid var(--line)}
+.footmark{display:flex;align-items:center;gap:9px;color:#344054;font-weight:700}
+.footmark img{width:30px;height:30px;border-radius:8px;object-fit:cover}
+@media(max-width:780px){footer{gap:20px;align-items:flex-start;flex-direction:column}}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#070b12;--ink:#f5f7fa;--muted:#9aa6b6;--cyan:#28e2ef;--blue:#56a8ff;--line:#253041}
+  body{background:radial-gradient(circle at 50% -12%,#123b47 0,rgba(18,59,71,0) 42%),radial-gradient(circle at 95% 40%,#101f3d 0,rgba(16,31,61,0) 35%),var(--bg)}
+  .navlinks a{color:#aab5c4}
+  .navlinks .pill{color:#071017;background:#63e9f1}
+  .footmark{color:#d7dee8}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a class="brand" href="/"><img src="/icon.jpg" alt="RunBot mark" />RunBot</a>
+    <div class="navlinks">
+      <a href="/blog">Blog</a>
+      <a class="pill" href="https://github.com/runbot-hq/run-bot">View on GitHub ↗</a>
+    </div>
+  </nav>
+  <slot />
+  <footer>
+    <div class="footmark"><img src="/icon.jpg" alt="" />RunBot</div>
+    <div>Open source software for GitHub runner operators.</div>
+  </footer>
+</div>
+</body>
+</html>

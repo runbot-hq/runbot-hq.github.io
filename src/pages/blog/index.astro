@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { fmtDate } from '../../lib/fmtDate';
+import { postPath } from '../../lib/postPath';
+
+const allPosts = await getCollection('blog');
+const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const featured: CollectionEntry<'blog'> | undefined = posts[0];
+const rest: CollectionEntry<'blog'>[] = posts.slice(1);
+---
+<Base title="Blog — RunBot" description="New actions, releases, and what's shipping next.">
+<style>
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #bdeef4;background:#effdff;border-radius:999px;color:#087f8c;font-size:13px;font-weight:650}
+section{padding:90px 0}
+.section-head{max-width:650px;margin-bottom:48px}
+/* h1 is the page title; h2 is the featured post; h3 is grid cards */
+h1{font-size:40px;line-height:1.1;letter-spacing:-.04em;margin:14px 0 12px}
+.section-head p{color:var(--muted);font-size:17px;margin:0}
+.featured{padding:40px;border:1px solid var(--line);border-radius:24px;background:#ffffffc9;box-shadow:0 10px 30px #10182808;margin-bottom:16px}
+.featured-meta{font-size:12px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase;margin-bottom:10px}
+.featured-title{font-size:clamp(24px,3.5vw,34px);line-height:1.1;letter-spacing:-.04em;margin:0 0 14px;font-weight:800}
+.featured-lead{color:var(--muted);font-size:16px;margin:0 0 20px;line-height:1.65;max-width:680px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tag{display:inline-flex;align-self:flex-start;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:#e8fbfd;color:#078d9c;border:1px solid #bdeef4}
+.button{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;font-weight:700;font-size:14px;border:1px solid var(--line);background:white;box-shadow:0 1px 2px #1018280a}
+.button.primary{color:white;border-color:#111827;background:#111827}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{padding:28px;border:1px solid var(--line);border-radius:20px;background:#ffffffc9;box-shadow:0 10px 30px #10182808;display:flex;flex-direction:column;align-items:flex-start}
+.post-meta{font-size:12px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase;margin-bottom:8px}
+.card h3{font-size:18px;margin:0 0 10px;letter-spacing:-.02em;line-height:1.25;font-weight:700}
+.card > p{margin:0 0 16px;color:var(--muted);line-height:1.6;align-self:stretch}
+.card .button{margin-top:auto}
+@media(max-width:780px){.featured{padding:24px}.grid{grid-template-columns:1fr}}
+@media(prefers-color-scheme:dark){
+  .eyebrow{border-color:#235f68;background:#0d282d;color:#78edf3}
+  .card,.featured{background:#0d141fdd;box-shadow:0 14px 38px #0005}
+  .button{background:#111823;color:#e8edf3}
+  .button.primary{color:#071017;border-color:#63e9f1;background:#63e9f1}
+  .tag{background:#12353b;color:#67eaf2;border-color:#235f68}
+}
+</style>
+<section>
+  <div class="section-head">
+    <div class="eyebrow">Updates</div>
+    <h1>What's new in RunBot.</h1>
+    <p>New actions, releases, and what's shipping next.</p>
+  </div>
+
+  {featured && (
+    <article class="featured">
+      <div class="featured-meta">{fmtDate(featured.data.date)}</div>
+      <div class="tags">{featured.data.tags.map((t: string) => <span class="tag">{t}</span>)}</div>
+      <h2 class="featured-title">{featured.data.title}</h2>
+      <p class="featured-lead">{featured.data.summary}</p>
+      <div><a class="button primary" href={postPath(featured.id)}>Read post →</a></div>
+    </article>
+  )}
+
+  <div class="grid">
+    {rest.map((post) => (
+      <article class="card">
+        <div class="post-meta">{fmtDate(post.data.date)}</div>
+        <div class="tags">{post.data.tags.map((t: string) => <span class="tag">{t}</span>)}</div>
+        <h3>{post.data.title}</h3>
+        <p>{post.data.summary}</p>
+        <a class="button" href={postPath(post.id)}>Read more →</a>
+      </article>
+    ))}
+  </div>
+</section>
+</Base>
