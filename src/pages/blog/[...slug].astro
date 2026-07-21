@@ -7,35 +7,17 @@ import { postPath } from '../../lib/postPath';
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map((post) => ({
-    // [...slug] (catch-all) is used intentionally rather than [slug] (single-segment).
-    // Rationale: if a post ever lives in a subdirectory of src/content/blog/
-    // (e.g. 2026/07-post.md), post.id will contain a slash. A plain [slug] route
-    // would 404 on that path; [...slug] handles it correctly. All current posts
-    // are flat-named so params.slug is always a string today — Astro 4 coerces
-    // this correctly. Do not rename this file to [slug].astro.
-    //
-    // postPath() strips the file extension and encodes each path segment.
-    // It is the single source of truth for slug construction — also used by
-    // blog/index.astro and rss.xml.js so all three stay in sync.
-    // Remove the extension-stripping step inside postPath when upgrading to
-    // Astro 5 (post.id no longer includes it).
     params: { slug: postPath(post.id).replace(/^\/blog\//, '') },
     props: { post },
   }));
 }
 
 const { post } = Astro.props;
-// post.render() is the correct Astro 4.x API. The standalone render() named
-// import from astro:content was introduced in Astro 5 — it does not exist in
-// Astro 4 and will cause a build-time module resolution error.
-// When upgrading to Astro 5, replace with:
-//   import { getCollection, render } from 'astro:content';
-//   const { Content } = await render(post);
 const { Content } = await post.render();
 ---
 <Base title={`${post.data.title} — RunBot`} description={post.data.summary}>
 <style>
-.post-wrap{max-width:680px;margin:0 auto;padding:72px 0 96px}
+.post-wrap{max-width:680px;margin:0 auto;padding:48px 0 72px}
 .post-meta-line{font-size:12px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase;margin-bottom:10px}
 .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .tag{display:inline-flex;align-self:flex-start;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:#e8fbfd;color:#078d9c;border:1px solid #bdeef4}
@@ -46,7 +28,7 @@ const { Content } = await post.render();
 .post-body :global(code){padding:2px 7px;background:var(--line);border-radius:5px;font-size:13px;font-family:ui-monospace,monospace}
 .post-body :global(pre){background:#070b12;border:1px solid #253041;border-radius:14px;padding:20px;overflow-x:auto;margin:20px 0}
 .post-body :global(pre code){background:none;color:#b9f6ff;padding:0}
-.button{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;font-weight:700;font-size:14px;border:1px solid var(--line);background:white;box-shadow:0 1px 2px #1018280a}
+.button{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;font-weight:700;font-size:14px;border:1px solid var(--line);background:white;box-shadow:0 1px 2px #1018280a;text-decoration:none}
 .divider{border:none;border-top:1px solid var(--line);margin:0}
 @media(prefers-color-scheme:dark){
   .tag{background:#12353b;color:#67eaf2;border-color:#235f68}
