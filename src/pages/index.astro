@@ -20,10 +20,10 @@ const CMD = 'curl -fsSL https://runbot-hq.github.io/install.sh | bash';
 .dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px #dff8e8}
 h1{font-size:clamp(48px,7vw,76px);line-height:.98;letter-spacing:-.065em;margin:22px 0 24px;max-width:720px}
 h1 span{background:linear-gradient(110deg,#04aebf,#0a84ff);-webkit-background-clip:text;color:transparent}
-.hero{min-height:650px;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:60px;padding:72px 0 96px}
+.hero{min-height:580px;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:60px;padding:48px 0 72px}
 .lead{font-size:19px;color:var(--muted);max-width:610px;margin:0 0 30px}
 .actions{display:flex;gap:12px;flex-wrap:wrap}
-.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border-radius:12px;font-weight:700;border:1px solid var(--line);background:white;box-shadow:0 1px 2px #1018280a}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 18px;border-radius:12px;font-weight:700;border:1px solid var(--line);background:white;box-shadow:0 1px 2px #1018280a;text-decoration:none}
 .button.primary{color:white;border-color:#111827;background:#111827}
 .note{margin-top:16px;color:#788396;font-size:13px}
 .visual{position:relative;display:grid;place-items:center}
@@ -45,7 +45,7 @@ code{display:block;padding:16px 18px;background:#070b12;border:1px solid #30394a
 code:focus{outline:2px solid #63e9f1;outline-offset:2px}
 .copy{font-size:12px;color:#abb4c4;margin-top:8px;text-align:right}
 @media(max-width:780px){
-  .hero{grid-template-columns:1fr;padding:55px 0 75px;text-align:center}
+  .hero{grid-template-columns:1fr;padding:40px 0 60px;text-align:center}
   .lead{margin-left:auto;margin-right:auto}
   .actions{justify-content:center}
   .visual{grid-row:1}
@@ -142,16 +142,11 @@ code:focus{outline:2px solid #63e9f1;outline-offset:2px}
         m.textContent = 'Click command to copy';
       }, 1800);
     } catch {
-      // navigator.clipboard is only available in secure contexts (HTTPS).
-      // Falls back gracefully in local dev (served over HTTP).
       m.textContent = 'Copy failed — select manually';
     }
   }
 
   c.onclick = copyCmd;
-  // Keyboard support: Enter and Space trigger copy, matching button semantics.
-  // role="button" + tabindex="0" on the <code> element makes this reachable
-  // via Tab for keyboard-only and assistive technology users.
   c.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); copyCmd(); } };
 </script>
 </Base>
